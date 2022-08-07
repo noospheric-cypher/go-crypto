@@ -42,6 +42,7 @@ type MessageDetails struct {
 	IsSymmetricallyEncrypted bool                // true if a passphrase could have decrypted the message.
 	DecryptedWith            Key                 // the private key used to decrypt the message, if any.
 	IsSigned                 bool                // true if the message is signed.
+	IsVerified               bool
 	SignedByKeyId            uint64              // the key id of the signer, if any.
 	SignedBy                 *Key                // the key of the signer, if available.
 	LiteralData              *packet.LiteralData // the metadata of the contents
@@ -393,6 +394,7 @@ func (scr *signatureCheckReader) Read(buf []byte) (int, error) {
 					}
 					scr.md.Signature = sig
 					scr.md.SignatureError = signatureError
+					scr.md.IsVerified = true
 				} else {
 					scr.md.UnverifiedSignatures = append(scr.md.UnverifiedSignatures, sig)
 				}
